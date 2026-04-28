@@ -1,9 +1,6 @@
 (function () {
     const doc = document;
 
-    // ==========================================
-    // 1. הגדרות מערכת מתקדמות וגמישות
-    // ==========================================
     const DEFAULT_CONFIG = {
         theme: 'modern',         // 'modern' | 'sidebar' | 'dark' | 'compact'
         position: 'bottom-right',// 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' | 'mid-right' | 'mid-left'
