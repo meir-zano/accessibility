@@ -107,4 +107,4 @@
 
 ---
 
-**פותח על ידי [meir_zano](https://github.com/meir-zano)
+פותח על ידי [meir_zano](https://github.com/meir-zano)
