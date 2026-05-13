@@ -10,7 +10,7 @@
         maxTextZoomPercent: 400,
         minTextZoomPercent: 50,
         creditText: 'Accessibility by Meir Zano',
-        iconType: 'person', 
+        iconType: 'person',
         iconStyle: 'default',
         pro: false,
         scriptCSS: {}
@@ -411,26 +411,26 @@ body.mz_hide-media audio {
                 if (el.hasAttribute('title') || el.title) el.title = translationValue;
             }
         });
-        
+
         if (spacingSlider) applySpacing(spacingSlider.value);
         if (lhSlider) applyLineHeight(lhSlider.value);
     }
 
     if (langSelect) langSelect.addEventListener('change', (e) => applyLanguage(e.target.value));
-    
+
     function applyCustomColors(bg, text) {
         if (bg && text) {
             doc.documentElement.style.setProperty('--mz-custom-bg', bg);
             doc.documentElement.style.setProperty('--mz-custom-text', text);
             doc.body.classList.add('mz-custom-colors');
-            if(bgColorPicker) bgColorPicker.value = bg;
-            if(textColorPicker) textColorPicker.value = text;
+            if (bgColorPicker) bgColorPicker.value = bg;
+            if (textColorPicker) textColorPicker.value = text;
         } else {
             doc.body.classList.remove('mz-custom-colors');
             doc.documentElement.style.removeProperty('--mz-custom-bg');
             doc.documentElement.style.removeProperty('--mz-custom-text');
-            if(bgColorPicker) bgColorPicker.value = "#ffffff";
-            if(textColorPicker) textColorPicker.value = "#000000";
+            if (bgColorPicker) bgColorPicker.value = "#ffffff";
+            if (textColorPicker) textColorPicker.value = "#000000";
         }
     }
 
@@ -443,9 +443,9 @@ body.mz_hide-media audio {
         const toggleClass = (id, cls) => {
             const btn = doc.getElementById(id);
             const isActive = doc.body.classList.contains(cls);
-            if(btn) { btn.classList.toggle("active", isActive); btn.setAttribute("aria-pressed", isActive ? "true" : "false"); }
+            if (btn) { btn.classList.toggle("active", isActive); btn.setAttribute("aria-pressed", isActive ? "true" : "false"); }
         };
-        
+
         toggleClass("mz_btn-grayscale", "mz_ac-grayscale");
         toggleClass("mz_btn-invert", "mz_ac-invert-colors");
         toggleClass("mz_btn-contrast", "mz_ac-soft-contrast");
@@ -458,26 +458,26 @@ body.mz_hide-media audio {
         toggleClass("mz_btn-reading-mask", "mz_ac-reading-mask");
         toggleClass("mz_btn-highlight-titles", "mz_ac-highlight-titles");
         toggleClass("mz_btn-keyboard-nav", "mz_ac-keyboard-nav");
-        
+
         toggleClass("mz_btn-align-right", "mz_ac-align-right");
         toggleClass("mz_btn-align-left", "mz_ac-align-left");
         toggleClass("mz_btn-align-center", "mz_ac-align-center");
         toggleClass("mz_btn-high-saturation", "mz_ac-high-saturation");
         toggleClass("mz_btn-low-saturation", "mz_ac-low-saturation");
-        
+
 
         const speechBtn = doc.getElementById("mz_speech-btn");
-        if(speechBtn) { speechBtn.classList.toggle("active", isSpeechActive); speechBtn.setAttribute("aria-pressed", isSpeechActive ? "true" : "false"); }
-        
+        if (speechBtn) { speechBtn.classList.toggle("active", isSpeechActive); speechBtn.setAttribute("aria-pressed", isSpeechActive ? "true" : "false"); }
+
         const magBtn = doc.getElementById("mz_btn-magnifier");
-        if(magBtn) { magBtn.classList.toggle("active", isMagnifierActive); magBtn.setAttribute("aria-pressed", isMagnifierActive ? "true" : "false"); }
+        if (magBtn) { magBtn.classList.toggle("active", isMagnifierActive); magBtn.setAttribute("aria-pressed", isMagnifierActive ? "true" : "false"); }
     }
 
     function toggleAltText(state) {
-        if(state) {
+        if (state) {
             doc.querySelectorAll('img[alt]').forEach(img => {
-                if(img.alt.trim() === '') return;
-                if(img.nextElementSibling && img.nextElementSibling.classList.contains('mz-alt-label')) return;
+                if (img.alt.trim() === '') return;
+                if (img.nextElementSibling && img.nextElementSibling.classList.contains('mz-alt-label')) return;
                 const span = doc.createElement('span'); span.className = 'mz-alt-label mz-ignore'; span.innerText = img.alt;
                 img.parentNode.insertBefore(span, img.nextSibling);
             });
@@ -531,7 +531,7 @@ body.mz_hide-media audio {
         if (s.hs) doc.body.classList.add("mz_ac-high-saturation");
         if (s.ls) doc.body.classList.add("mz_ac-low-saturation");
         if (s.cb && s.ct) applyCustomColors(s.cb, s.ct);
-        
+
         if (s.al) { doc.getElementById("mz_btn-show-alt").classList.add("active"); setTimeout(() => toggleAltText(true), 500); }
         if (s.mu) { doc.getElementById("mz_btn-mute-audio").classList.add("active"); setTimeout(() => toggleMute(true), 500); }
 
@@ -539,7 +539,12 @@ body.mz_hide-media audio {
         if (s.sp && s.sp !== 0) { spacingSlider.value = s.sp; applySpacing(s.sp); }
         if (s.lh && s.lh !== 1.5) { lhSlider.value = s.lh; applyLineHeight(s.lh); }
 
-        if (s.s) isSpeechActive = true;
+        if (s.s) {
+            isSpeechActive = true;
+            doc.addEventListener("click", () => {
+                if (isSpeechActive) window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+            }, { once: true });
+        }
         if (s.m) { isMagnifierActive = true; doc.body.classList.add("mz_magnifier-active"); updateMouseTracking(); }
 
         updateActiveClasses();
@@ -564,7 +569,7 @@ body.mz_hide-media audio {
             if (CONFIG.theme !== 'sidebar') {
                 let menuWidth = menu.offsetWidth || 360;
                 menu.style.left = (newX < menuWidth ? newX : newX - (menuWidth - 60)) + "px";
-                if (newY < window.innerHeight / 2) { menu.style.top = (newY + 75) + "px"; } 
+                if (newY < window.innerHeight / 2) { menu.style.top = (newY + 75) + "px"; }
                 else { menu.style.top = Math.max(0, newY - (menu.offsetHeight || 450) - 15) + "px"; }
                 menu.style.right = "auto"; menu.style.bottom = "auto";
             }
@@ -582,8 +587,8 @@ body.mz_hide-media audio {
 
     const bindToggleFeature = (btnId, className, excludeArr = []) => {
         doc.getElementById(btnId).onclick = () => {
-            excludeArr.forEach(cls => doc.body.classList.remove(cls)); 
-            doc.body.classList.toggle(className); saveSettings(); 
+            excludeArr.forEach(cls => doc.body.classList.remove(cls));
+            doc.body.classList.toggle(className); saveSettings();
         };
     };
 
@@ -592,12 +597,12 @@ body.mz_hide-media audio {
     bindToggleFeature("mz_btn-contrast", "mz_ac-soft-contrast");
     bindToggleFeature("mz_btn-high-saturation", "mz_ac-high-saturation", ["mz_ac-grayscale", "mz_ac-low-saturation"]);
     bindToggleFeature("mz_btn-low-saturation", "mz_ac-low-saturation", ["mz_ac-grayscale", "mz_ac-high-saturation"]);
-    
+
     bindToggleFeature("mz_btn-readable-font", "mz_ac-readable-font", ["mz_ac-dyslexia"]);
     bindToggleFeature("mz_btn-dyslexia-font", "mz_ac-dyslexia", ["mz_ac-readable-font"]);
     bindToggleFeature("mz_btn-highlight-links", "mz_ac-highlight-links");
     bindToggleFeature("mz_btn-highlight-titles", "mz_ac-highlight-titles");
-    
+
     bindToggleFeature("mz_btn-align-right", "mz_ac-align-right", ["mz_ac-align-left", "mz_ac-align-center"]);
     bindToggleFeature("mz_btn-align-left", "mz_ac-align-left", ["mz_ac-align-right", "mz_ac-align-center"]);
     bindToggleFeature("mz_btn-align-center", "mz_ac-align-center", ["mz_ac-align-right", "mz_ac-align-left"]);
@@ -611,17 +616,16 @@ body.mz_hide-media audio {
     doc.getElementById("mz_btn-mute-audio").onclick = (e) => { const btn = e.currentTarget; const isActive = !btn.classList.contains("active"); btn.classList.toggle("active", isActive); btn.setAttribute("aria-pressed", isActive ? "true" : "false"); toggleMute(isActive); saveSettings(); };
     doc.getElementById("mz_btn-anim").onclick = () => { const isPaused = doc.body.classList.toggle("mz_no-animations"); doc.querySelectorAll("video").forEach(v => isPaused ? v.pause() : v.play()); saveSettings(); };
 
-    // מנגנון חכם לסליידר - מונע קפיצות (Jitter) בזמן גרירה
     zoomSlider.addEventListener('mousedown', () => isZoomDragging = true);
-    zoomSlider.addEventListener('touchstart', () => isZoomDragging = true, {passive: true});
-    
-    const finishDrag = () => { if(isZoomDragging) { isZoomDragging = false; applyFontSize(zoomSlider.value / 100, false); saveSettings(); } };
+    zoomSlider.addEventListener('touchstart', () => isZoomDragging = true, { passive: true });
+
+    const finishDrag = () => { if (isZoomDragging) { isZoomDragging = false; applyFontSize(zoomSlider.value / 100, false); saveSettings(); } };
     zoomSlider.addEventListener('mouseup', finishDrag);
     zoomSlider.addEventListener('touchend', finishDrag);
     zoomSlider.addEventListener('change', finishDrag);
 
     zoomSlider.oninput = (e) => { applyFontSize(e.target.value / 100, true); };
-    
+
     spacingSlider.oninput = (e) => { applySpacing(e.target.value); saveSettings(); };
     function applySpacing(val) {
         spacingMult = parseFloat(val);
@@ -660,7 +664,7 @@ body.mz_hide-media audio {
         }
 
         const rootFontSize = parseFloat(window.getComputedStyle(doc.documentElement).fontSize) || 16;
-        
+
         const shouldIgnore = (el) => {
             if (el.closest('.mz-ignore') || el.closest('#mz_accessibility-icon')) return true;
             if (isDragging && el.closest('#mz_accessibility-menu')) return true;
@@ -702,7 +706,15 @@ body.mz_hide-media audio {
         }, 50);
     }
 
-    doc.getElementById("mz_speech-btn").onclick = () => { isSpeechActive = !isSpeechActive; saveSettings(); };
+    doc.getElementById("mz_speech-btn").onclick = () => {
+        isSpeechActive = !isSpeechActive;
+        if (isSpeechActive) {
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+        } else {
+            window.speechSynthesis.cancel();
+        }
+        saveSettings();
+    };
     function speakText(text) {
         if (!isSpeechActive || !text) return;
         window.speechSynthesis.cancel();
@@ -719,7 +731,7 @@ body.mz_hide-media audio {
 
     function handleMouseMove(e) { doc.body.style.setProperty("--mouse-x", e.clientX + "px"); doc.body.style.setProperty("--mouse-y", e.clientY + "px"); }
     function updateMouseTracking() {
-        if (isMagnifierActive || doc.body.classList.contains("mz_ac-reading-mask")) { doc.addEventListener("mousemove", handleMouseMove); } 
+        if (isMagnifierActive || doc.body.classList.contains("mz_ac-reading-mask")) { doc.addEventListener("mousemove", handleMouseMove); }
         else { doc.removeEventListener("mousemove", handleMouseMove); }
     }
 
@@ -732,12 +744,12 @@ body.mz_hide-media audio {
     doc.getElementById("mz_btn-reset").onclick = () => {
         fontSizeMult = 1; isSpeechActive = false; spacingMult = 0; lineheightMult = 1.5;
         if (isMagnifierActive) { isMagnifierActive = false; doc.body.classList.remove("mz_magnifier-active"); doc.body.style.transform = ""; }
-        
+
         doc.body.className = doc.body.className.split(' ').filter(c => !c.startsWith('mz_ac-') && !c.startsWith('mz-text-size-') && !c.startsWith('mz-font-size-') && c !== 'mz-custom-colors' && c !== 'mz-dynamic-spacing' && c !== 'mz-dynamic-lineheight').join(' ');
-        
+
         doc.documentElement.style.removeProperty('--mz-size-text'); doc.documentElement.style.removeProperty('--mz-custom-bg'); doc.documentElement.style.removeProperty('--mz-custom-text');
         doc.documentElement.style.removeProperty('--mz-menu-scale');
-        
+
         toggleAltText(false); toggleMute(false);
         doc.getElementById("mz_btn-show-alt").classList.remove("active"); doc.getElementById("mz_btn-mute-audio").classList.remove("active");
 
@@ -745,7 +757,7 @@ body.mz_hide-media audio {
         zoomSlider.value = 100; spacingSlider.value = 0; lhSlider.value = 1.5;
         if (textColorPicker) textColorPicker.value = "#000000"; if (bgColorPicker) bgColorPicker.value = "#ffffff";
         if (window.speechSynthesis) window.speechSynthesis.cancel();
-        
+
         localStorage.removeItem("mz_accessibility_settings"); updateActiveClasses();
     };
 
